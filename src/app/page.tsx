@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-// --- ТИПЫ ДАННЫХ ---
 export interface CatalogItem {
   id: number;
   name: string;
@@ -21,7 +20,6 @@ export interface CatalogItem {
   };
 }
 
-// Данные из вашего каталога
 const CATALOG_ITEMS: CatalogItem[] = [
   {
     id: 1,
@@ -470,392 +468,341 @@ type CharacterKey = "bree" | "gaby" | "lynette" | "susan" | "edie";
 
 interface CharacterProfile {
   name: string;
-  role: string;
-  tagline: string;
-  quote: string;
-  recommendedItemId: number;
+  definition: string;
+  description: string;
+  itemId: number;
 }
 
 const CHARACTERS: Record<CharacterKey, CharacterProfile> = {
   bree: {
-    name: "Бри Ван де Камп",
-    role: "Безупречная перфекционистка",
-    tagline: "Традиции, строгая симметрия, столовое серебро и скрытая буря страстей.",
-    quote: "«Улыбка — это броня, которая защищает нас от грубости внешнего мира».",
-    recommendedItemId: 17 // Ваза 'Восточная' (или Пикси / Сфера)
+    name: "Бри",
+    definition: "Симметрия, перфекционизм и порядок",
+    description: "Абсолютный контроль над формой. Выверенные пропорции, сдержанность и внутренняя стойкость, скрытая за безупречной поверхностью.",
+    itemId: 17
   },
   gaby: {
-    name: "Габриэль Солис",
-    role: "Королева гламура и соблазна",
-    tagline: "Шелк, высокая мода, дерзкие желания и уверенность в своей неотразимости.",
-    quote: "«Я не создана для того, чтобы убирать. Я создана, чтобы сиять и тратить деньги».",
-    recommendedItemId: 18 // Ваза 'Силк' (или Лайтнинг)
+    name: "Габриэль",
+    definition: "Струящийся шелк и чувственная роскошь",
+    description: "Осознание собственной ценности, текучие мягкие складки, тактильный лоск и отказ от любых компромиссов в эстетике.",
+    itemId: 18
   },
   lynette: {
-    name: "Линетт Скаво",
-    role: "Стратег и железная леди",
-    tagline: "Практичность, карьерный напор, управление хаосом и непоколебимая стойкость.",
-    quote: "«Если вы думаете, что я сдамся без боя, вы явно не знаете матерей четверых детей».",
-    recommendedItemId: 20 // Кашпо-ваза 'Кьюб' (или Дрил)
+    name: "Линетт",
+    definition: "Монолитная устойчивость и функция",
+    description: "Практичность, способная выдержать любой внешний хаос. Четкая геометрия, надежный баланс и честная конструктивная логика.",
+    itemId: 20
   },
   susan: {
-    name: "Сьюзан Майер",
-    role: "Искренняя романтичная натура",
-    tagline: "Большое любящее сердце, легкая неуклюжесть, вдохновение и душевное тепло.",
-    quote: "«Я просто верю в сказки... пусть даже в конце сказки я обязательно споткнусь и упаду».",
-    recommendedItemId: 3 // Скульптура-ваза 'Сердце' (или Буфо)
+    name: "Сьюзан",
+    definition: "Бионическая органика и открытость",
+    description: "Искренность, не боящаяся ошибок. Мягкие контуры, живая пластика и человеческое тепло взамен холодной строгости.",
+    itemId: 3
   },
   edie: {
-    name: "Иди Бритт",
-    role: "Дерзкая бунтарка пригорода",
-    tagline: "Хищный темперамент, независимость, игра по своим правилам и яркие акценты.",
-    quote: "«Дорогая, я никогда не извиняюсь за то, что беру от этой жизни лучшее».",
-    recommendedItemId: 19 // Светильник-ваза 'Лайтнинг'
+    name: "Иди",
+    definition: "Острая геометрия и преломление света",
+    description: "Драматичный силуэт, экспрессия и независимость. Объект, который трансформирует пространство вокруг себя и собирает свет.",
+    itemId: 19
   }
 };
 
-interface QuestionOption {
-  text: string;
-  character: CharacterKey;
-}
-
 interface Question {
   id: number;
-  question: string;
-  subtitle: string;
-  options: QuestionOption[];
+  title: string;
+  options: {
+    text: string;
+    character: CharacterKey;
+  }[];
 }
 
 const QUESTIONS: Question[] = [
   {
     id: 1,
-    question: "Субботнее утро на Вистерия Лейн. Чем заняты вы?",
-    subtitle: "Солнце только встает над идиллическим пригородом...",
+    title: "Субботнее утро в пригородном доме. Ваше естественное состояние?",
     options: [
-      { text: "Выпекаю идеальные маффины с лимонной цедрой и проверяю стрелки на скатертях", character: "bree" },
-      { text: "Потягиваю эспрессо в шелковом пеньюаре, изучая новый лукбук с Миланской недели моды", character: "gaby" },
-      { text: "Одной рукой варю овсянку детям, другой завершаю стратегический отчет для шефа", character: "lynette" },
-      { text: "Споткнулась о поливочный шланг Майка, пока несла ему слегка подгоревший пирог", character: "susan" },
-      { text: "Выхожу на пробежку в облегающем топе, ловя завистливые взгляды всех мужей на улице", character: "edie" }
+      { text: "Выверенный фамильный завтрак, скатерть без складок и абсолютная тишина", character: "bree" },
+      { text: "Поздний подъем в шелке, аромат свежего кофе и выбор наряда на вечер", character: "gaby" },
+      { text: "Координация домашних дел параллельно с решением сложных задач в телефоне", character: "lynette" },
+      { text: "Попытка навести порядок, закончившаяся разлитым чаем и новыми мыслями", character: "susan" },
+      { text: "Пробежка по улице в открытой форме, приковывающая взгляды всех вокруг", character: "edie" }
     ]
   },
   {
     id: 2,
-    question: "Какой секрет вы бережно прячете за парадной дверью дома?",
-    subtitle: "У каждого дома на этой улице есть свой тайный шкаф...",
+    title: "Что скрывается за закрытыми ставнями вашего личного пространства?",
     options: [
-      { text: "Тайны семьи, которые никогда и ни при каких обстоятельствах не выйдут на свет", character: "bree" },
-      { text: "Скрытые выписки по кредитным картам с суммами, способными разорить банк", character: "gaby" },
-      { text: "Жгучее желание сбежать хотя бы на пару суток в тихий отель без шума и детских криков", character: "lynette" },
-      { text: "Кипу старых любовных писем и набросков, которые вызывают тихие слезы", character: "susan" },
-      { text: "Я ничего не прячу: пусть весь квартал обсуждает мои романы и завидует", character: "edie" }
+      { text: "Семейный кризис, о котором внешний мир никогда не должен догадаться", character: "bree" },
+      { text: "Счета за неоправданно дорогой шопинг, спрятанные от посторонних глаз", character: "gaby" },
+      { text: "Желание остаться в абсолютном одиночестве хотя бы на двадцать четыре часа", character: "lynette" },
+      { text: "Тайник со старыми письмами, дневниками и дорогими сердцу воспоминаниями", character: "susan" },
+      { text: "Никаких секретов: пусть обсуждают все, что считают нужным", character: "edie" }
     ]
   },
   {
     id: 3,
-    question: "Званый ужин у соседей. Какой напиток наполняет ваш бокал?",
-    subtitle: "Разговоры становятся тише, а взгляды — острее...",
+    title: "Закрытый вечер у соседей. Атмосфера накаляется. Что вы выберете?",
     options: [
-      { text: "Безупречно охлажденное шардоне высшей категории в тончайшем хрустале", character: "bree" },
-      { text: "Винтажное розовое шампанское с клубникой — только премиум-сегмент", character: "gaby" },
-      { text: "Крепкий двойной эспрессо или скотч со льдом, чтобы пережить этот вечер", character: "lynette" },
-      { text: "Сладкий пунш, половину которого я случайно пролью на чужой ковер", character: "susan" },
-      { text: "Сухой мартини с тремя оливками и взглядом, предвещающим бурю", character: "edie" }
+      { text: "Сухое выдержанное белое вино правильной температуры в тонком хрустале", character: "bree" },
+      { text: "Коллекционное шампанское со свежей садовой клубникой", character: "gaby" },
+      { text: "Двойной эспрессо или чистый виски безо льда, чтобы контролировать ситуацию", character: "lynette" },
+      { text: "Оригинальный пунш, бокал которого я почти наверняка уроню", character: "susan" },
+      { text: "Сухой ледяной мартини с оливкой и прямой оценивающий взгляд", character: "edie" }
     ]
   },
   {
     id: 4,
-    question: "Кто-то в пригороде перешел вам дорогу. Ваш ответный ход?",
-    subtitle: "На Вистерия Лейн месть — это блюдо, подаваемое безукоризненно...",
+    title: "Ваши личные границы были нарушены. Каков метод реагирования?",
     options: [
-      { text: "Принесу корзину фирменной выпечки и невозмутимо намекну на знание их грязной тайны", character: "bree" },
-      { text: "Устрою эффектную публичную сцену и разорю их репутацию одним звонком ювелиру", character: "gaby" },
-      { text: "Соберу неопровержимые факты, выстрою аналитическую партию и разгромлю противника", character: "lynette" },
-      { text: "Попробую объясниться по душам, но случайно наломаю дров еще сильнее", character: "susan" },
-      { text: "Уведу у обидчицы самого привлекательного мужчину или перекуплю ее любимый дом", character: "edie" }
+      { text: "Безупречная вежливость, теплый пирог в подарок и тонкий намек на компромат", character: "bree" },
+      { text: "Публичный красивый жест, наносящий точный удар по самолюбию обидчика", character: "gaby" },
+      { text: "Сухие факты, стратегический расчет и бескомпромиссная аргументация", character: "lynette" },
+      { text: "Эмоциональный прямой разговор, который случайно обернется новой путаницей", character: "susan" },
+      { text: "Холодная контратака и демонстративное присвоение чужой выгоды", character: "edie" }
     ]
   },
   {
     id: 5,
-    question: "Что для вас идеальный домашний уют и эстетика?",
-    subtitle: "Интерьер говорит о владельце громче любых признаний...",
+    title: "Какая пластика объекта вам ближе всего?",
     options: [
-      { text: "Антикварные формы, выверенные пропорции, благородство и абсолютный порядок", character: "bree" },
-      { text: "Шелковистые переливы, утонченный блеск, чувственность и дорогая роскошь", character: "gaby" },
-      { text: "Четкая геометрия, монументальность, долговечные материалы без лишней мишуры", character: "lynette" },
-      { text: "Трогательные арт-объекты, теплота, органические бионические линии и романтика", character: "susan" },
-      { text: "Драматичный свет, авангардные острые грани и дерзкий футуристичный стиль", character: "edie" }
+      { text: "Классическая гармония пропорций, устойчивость и строгая симметрия", character: "bree" },
+      { text: "Струящиеся мягкие перекаты, игра градиентов и атласный перелив", character: "gaby" },
+      { text: "Архитектурный кубический монолит с плотными монолитными гранями", character: "lynette" },
+      { text: "Плавные природные линии, бионическая мягкость и открытое тепло", character: "susan" },
+      { text: "Ломаные зигзагообразные ребра, направленный свет и острый ритм", character: "edie" }
     ]
   }
 ];
 
-export default function DesperateHousewivesQuiz() {
-  const [currentStep, setCurrentStep] = useState<number>(-1); // -1 = Welcome screen
-  const [answers, setAnswers] = useState<CharacterKey[]>([]);
-  const [resultItem, setResultItem] = useState<CatalogItem | null>(null);
+export default function Quiz() {
+  const [step, setStep] = useState<number>(-1);
+  const [picks, setPicks] = useState<CharacterKey[]>([]);
   const [resultCharacter, setResultCharacter] = useState<CharacterProfile | null>(null);
+  const [resultItem, setResultItem] = useState<CatalogItem | null>(null);
+  const [imgFailed, setImgFailed] = useState<boolean>(false);
 
-  // Старт квиза
-  const handleStart = () => {
-    setAnswers([]);
-    setCurrentStep(0);
-    setResultItem(null);
+  const start = () => {
+    setPicks([]);
+    setImgFailed(false);
     setResultCharacter(null);
+    setResultItem(null);
+    setStep(0);
   };
 
-  // Выбор ответа
-  const handleAnswer = (character: CharacterKey) => {
-    const updated = [...answers, character];
-    setAnswers(updated);
+  const handlePick = (key: CharacterKey) => {
+    const updated = [...picks, key];
+    setPicks(updated);
 
-    if (currentStep + 1 < QUESTIONS.length) {
-      setCurrentStep(currentStep + 1);
+    if (step + 1 < QUESTIONS.length) {
+      setStep(step + 1);
     } else {
-      calculateResult(updated);
+      resolveResult(updated);
     }
   };
 
-  // Подсчет результатов
-  const calculateResult = (finalAnswers: CharacterKey[]) => {
-    const counts: Record<CharacterKey, number> = {
-      bree: 0,
-      gaby: 0,
-      lynette: 0,
-      susan: 0,
-      edie: 0
-    };
+  const resolveResult = (allPicks: CharacterKey[]) => {
+    const counts: Record<CharacterKey, number> = { bree: 0, gaby: 0, lynette: 0, susan: 0, edie: 0 };
+    allPicks.forEach((k) => (counts[k] += 1));
 
-    finalAnswers.forEach((key) => {
-      counts[key] = (counts[key] || 0) + 1;
-    });
-
-    let topCharacter: CharacterKey = "bree";
-    let maxVotes = -1;
-
-    (Object.keys(counts) as CharacterKey[]).forEach((key) => {
-      if (counts[key] > maxVotes) {
-        maxVotes = counts[key];
-        topCharacter = key;
+    let dominant: CharacterKey = "bree";
+    let max = -1;
+    (Object.keys(counts) as CharacterKey[]).forEach((k) => {
+      if (counts[k] > max) {
+        max = counts[k];
+        dominant = k;
       }
     });
 
-    const characterData = CHARACTERS[topCharacter];
-    const item = CATALOG_ITEMS.find((i) => i.id === characterData.recommendedItemId) || CATALOG_ITEMS[0];
+    const charProfile = CHARACTERS[dominant];
+    const item = CATALOG_ITEMS.find((i) => i.id === charProfile.itemId) || CATALOG_ITEMS[0];
 
-    setResultCharacter(characterData);
+    setResultCharacter(charProfile);
     setResultItem(item);
-    setCurrentStep(QUESTIONS.length); // Экран результатов
+    setStep(QUESTIONS.length);
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F6F0] text-[#3D352E] flex flex-col justify-between selection:bg-[#E2D2BE] selection:text-[#2B231D] font-sans relative overflow-hidden">
-      {/* Мягкие фоновые декоративные круги в бежевых тонах */}
-      <div className="absolute top-[-10%] right-[-5%] w-[420px] h-[420px] rounded-full bg-[#EFE7DC] opacity-60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-[-10%] left-[-5%] w-[460px] h-[460px] rounded-full bg-[#F3ECE1] opacity-70 blur-3xl pointer-events-none" />
-
-      {/* Верхний лаконичный хедер */}
-      <header className="w-full max-w-4xl mx-auto px-6 py-8 flex justify-between items-center z-10">
-        <div className="flex items-center space-x-2">
-          <span className="h-2 w-2 rounded-full bg-[#C2A382]" />
-          <span className="text-xs uppercase tracking-[0.25em] text-[#8C7A68] font-medium">
-            Wisteria Lane • Décor Collection
+    <div className="min-h-screen bg-[#FAF7F2] text-[#2C2416] flex flex-col justify-between font-sans antialiased selection:bg-[#EADBCE] selection:text-[#2C2416]">
+      {/* Верхний минималистичный бар */}
+      <header className="w-full max-w-xl mx-auto px-6 pt-10 pb-6 flex items-center justify-between border-b border-[#E6DFD5]">
+        <span className="text-[11px] tracking-[0.28em] font-medium uppercase text-[#2C2416]">
+          3d fabriq
+        </span>
+        {step >= 0 && step < QUESTIONS.length && (
+          <span className="text-[11px] font-mono tracking-widest text-[#8A7E70]">
+            0{step + 1} / 0{QUESTIONS.length}
           </span>
-        </div>
-        <div className="text-xs tracking-wider text-[#A89887] uppercase">
-          3d fabriq aesthetic
-        </div>
+        )}
       </header>
 
-      {/* Основной контент */}
-      <main className="flex-1 flex items-center justify-center px-4 py-8 z-10 w-full max-w-2xl mx-auto">
+      {/* Центральная часть */}
+      <main className="flex-1 flex items-center justify-center px-6 py-12 w-full max-w-xl mx-auto">
         <AnimatePresence mode="wait">
-          {/* 1. ПРИВЕТСТВЕННЫЙ ЭКРАН */}
-          {currentStep === -1 && (
+          {/* СТАРТ */}
+          {step === -1 && (
             <motion.div
-              key="welcome"
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="w-full bg-[#FCFAF6] border border-[#EBE3D5] rounded-3xl p-8 sm:p-12 shadow-[0_15px_40px_-15px_rgba(164,142,120,0.12)] text-center backdrop-blur-sm"
+              key="start"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full text-left"
             >
-              <div className="inline-block px-4 py-1.5 rounded-full bg-[#F2EAE0] text-[#7A6450] text-xs uppercase tracking-widest font-semibold mb-6">
-                Интерактивный тест
-              </div>
-              <h1 className="text-3xl sm:text-4xl font-serif text-[#2F2720] leading-tight mb-4">
-                Какая вы Отчаянная Домохозяйка и какой арт-объект вам сужден?
+              <h1 className="text-3xl sm:text-4xl font-light tracking-tight text-[#2C2416] leading-tight mb-6">
+                Форма и характер
               </h1>
-              <p className="text-sm sm:text-base text-[#7A6E63] leading-relaxed max-w-lg mx-auto mb-8 font-light">
-                Пройдите 5 вопросов о тайнах за идеальными газонами Вистерия Лейн, чтобы раскрыть свой тайный типаж и найти свой авторский акцент в интерьере.
+              <p className="text-sm sm:text-base text-[#756857] font-light leading-relaxed mb-10 max-w-md">
+                Пять вопросов о закрытых дверях тихого загородного дома. Исследование вашего архетипа и соответствующей ему материальной формы.
               </p>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleStart}
-                className="w-full sm:w-auto px-10 py-4 bg-[#C8A885] hover:bg-[#BA9974] text-white rounded-full text-sm font-medium tracking-wide shadow-md transition-colors"
+              <button
+                onClick={start}
+                className="inline-block px-8 py-3.5 bg-[#2C2416] text-[#FAF7F2] text-xs font-medium uppercase tracking-[0.2em] rounded-md hover:opacity-90 transition-opacity"
               >
-                Войти на Вистерия Лейн
-              </motion.button>
+                Начать
+              </button>
             </motion.div>
           )}
 
-          {/* 2. ЭКРАН ВОПРОСНИКА */}
-          {currentStep >= 0 && currentStep < QUESTIONS.length && (
+          {/* ВОПРОСЫ */}
+          {step >= 0 && step < QUESTIONS.length && (
             <motion.div
-              key={`question-${currentStep}`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.4 }}
-              className="w-full bg-[#FCFAF6] border border-[#EBE3D5] rounded-3xl p-6 sm:p-10 shadow-[0_15px_40px_-15px_rgba(164,142,120,0.1)] backdrop-blur-sm"
+              key={`q-${step}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25 }}
+              className="w-full text-left"
             >
-              {/* Прогресс-бар */}
-              <div className="mb-8">
-                <div className="flex justify-between items-center text-xs tracking-wider uppercase text-[#9B8C7E] mb-2 font-medium">
-                  <span>Вопрос {currentStep + 1} из {QUESTIONS.length}</span>
-                  <span>{Math.round(((currentStep + 1) / QUESTIONS.length) * 100)}%</span>
-                </div>
-                <div className="w-full h-1.5 bg-[#EFE7DC] rounded-full overflow-hidden">
-                  <motion.div
-                    className="h-full bg-[#C8A885] rounded-full"
-                    initial={{ width: `${(currentStep / QUESTIONS.length) * 100}%` }}
-                    animate={{ width: `${((currentStep + 1) / QUESTIONS.length) * 100}%` }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </div>
-              </div>
+              <h2 className="text-xl sm:text-2xl font-light text-[#2C2416] leading-snug mb-8">
+                {QUESTIONS[step].title}
+              </h2>
 
-              {/* Заголовок вопроса */}
-              <div className="mb-6">
-                <h2 className="text-xl sm:text-2xl font-serif text-[#2E2721] mb-2 leading-snug">
-                  {QUESTIONS[currentStep].question}
-                </h2>
-                <p className="text-xs sm:text-sm text-[#87796D] italic">
-                  {QUESTIONS[currentStep].subtitle}
-                </p>
-              </div>
-
-              {/* Варианты ответов */}
               <div className="space-y-3">
-                {QUESTIONS[currentStep].options.map((option, idx) => (
-                  <motion.button
+                {QUESTIONS[step].options.map((option, idx) => (
+                  <button
                     key={idx}
-                    whileHover={{ scale: 1.01, backgroundColor: "#F7EFE5" }}
-                    whileTap={{ scale: 0.99 }}
-                    onClick={() => handleAnswer(option.character)}
-                    className="w-full text-left p-4 sm:p-5 rounded-2xl border border-[#E8DFD3] bg-[#FAF6F0] text-[#423932] transition-all flex items-start space-x-3.5 group"
+                    onClick={() => handlePick(option.character)}
+                    className="w-full text-left p-4 sm:p-5 border border-[#E6DFD5] hover:border-[#2C2416] rounded-lg text-xs sm:text-sm text-[#2C2416] leading-relaxed transition-colors flex items-start space-x-3.5 group"
                   >
-                    <span className="w-6 h-6 rounded-full border border-[#D5C6B5] bg-white flex items-center justify-center text-xs text-[#8A7969] font-medium flex-shrink-0 mt-0.5 group-hover:border-[#C8A885] group-hover:text-[#C8A885]">
+                    <span className="text-[11px] font-mono text-[#8A7E70] group-hover:text-[#2C2416] transition-colors mt-0.5">
                       {String.fromCharCode(65 + idx)}
                     </span>
-                    <span className="text-sm sm:text-base leading-relaxed text-[#4A4038]">
-                      {option.text}
-                    </span>
-                  </motion.button>
+                    <span>{option.text}</span>
+                  </button>
                 ))}
               </div>
             </motion.div>
           )}
 
-          {/* 3. ЭКРАН РЕЗУЛЬТАТА */}
-          {currentStep === QUESTIONS.length && resultCharacter && resultItem && (
+          {/* РЕЗУЛЬТАТ */}
+          {step === QUESTIONS.length && resultCharacter && resultItem && (
             <motion.div
               key="result"
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              className="w-full bg-[#FCFAF6] border border-[#EBE3D5] rounded-3xl p-6 sm:p-10 shadow-[0_20px_50px_-20px_rgba(150,130,110,0.15)]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.35 }}
+              className="w-full text-left"
             >
-              {/* Бейдж типажа */}
-              <div className="text-center mb-6">
-                <span className="inline-block px-4 py-1.5 rounded-full bg-[#EFE4D6] text-[#7A6450] text-xs uppercase tracking-widest font-semibold mb-3">
-                  Ваш типаж на Вистерия Лейн
-                </span>
-                <h2 className="text-3xl font-serif text-[#2B231D] mb-1">
+              {/* Типаж */}
+              <div className="pb-8 border-b border-[#E6DFD5] mb-8">
+                <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#8A7E70] mb-2">
+                  Архетип
+                </div>
+                <h2 className="text-3xl font-light text-[#2C2416] mb-1">
                   {resultCharacter.name}
                 </h2>
-                <p className="text-sm font-medium text-[#A68665] tracking-wide">
-                  {resultCharacter.role}
+                <div className="text-xs tracking-wider text-[#756857] mb-4">
+                  {resultCharacter.definition}
+                </div>
+                <p className="text-xs sm:text-sm text-[#524637] font-light leading-relaxed">
+                  {resultCharacter.description}
                 </p>
               </div>
 
-              {/* Характеристика и цитата */}
-              <div className="bg-[#FAF5ED] border border-[#EAE0D2] rounded-2xl p-5 mb-8 text-center">
-                <p className="text-sm text-[#5C5046] mb-3 leading-relaxed">
-                  {resultCharacter.tagline}
-                </p>
-                <p className="text-xs text-[#8A7B6D] italic">
-                  {resultCharacter.quote}
-                </p>
-              </div>
+              {/* Рекомендованный объект */}
+              <div className="mb-10">
+                <div className="text-[10px] font-mono uppercase tracking-[0.25em] text-[#8A7E70] mb-4">
+                  Рекомендованный объект
+                </div>
 
-              {/* Карточка подобранного арт-объекта / лампы */}
-              <div className="border border-[#E7DDD0] rounded-2xl p-5 sm:p-6 bg-white/70 shadow-sm mb-8">
-                <div className="flex flex-col sm:flex-row items-center gap-6">
-                  {/* Заглушка/изображение товара */}
-                  <div className="w-full sm:w-44 h-48 rounded-xl bg-gradient-to-tr from-[#EFE8DE] to-[#F7F2EA] flex flex-col items-center justify-center p-4 border border-[#E2D8CA] flex-shrink-0 text-center relative overflow-hidden">
-                    <div className="text-3xl mb-2">🏺</div>
-                    <span className="text-xs font-serif font-medium text-[#6B5C4E]">
-                      {resultItem.name}
-                    </span>
-                    <span className="text-[10px] uppercase text-[#9B8C7D] mt-1 tracking-wider">
-                      {resultItem.specifications.style}
-                    </span>
-                    <div className="absolute top-2 right-2 text-[10px] bg-[#E8DFD1] px-2 py-0.5 rounded text-[#5D4E3F]">
-                      €{resultItem.price}
-                    </div>
+                <div className="border border-[#E6DFD5] rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row gap-6 items-start sm:items-center">
+                  {/* Изображение из каталога со скруглением */}
+                  <div className="w-full sm:w-40 aspect-square bg-[#F3ECE1] border border-[#E6DFD5] rounded-lg relative overflow-hidden flex items-center justify-center flex-shrink-0">
+                    {!imgFailed ? (
+                      <img
+                        src={resultItem.images[0]}
+                        alt={resultItem.name}
+                        onError={() => setImgFailed(true)}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="text-[10px] font-mono text-[#8A7E70] uppercase tracking-widest text-center px-2">
+                        {resultItem.name}
+                      </div>
+                    )}
                   </div>
 
-                  {/* Описание товара */}
-                  <div className="flex-1 text-left">
-                    <div className="flex items-center space-x-2 mb-1.5">
-                      <span className="text-xs font-semibold uppercase tracking-wider text-[#A28263]">
-                        {resultItem.specifications.collection}
-                      </span>
-                      <span className="text-[#D3C7B7]">•</span>
-                      <span className="text-xs text-[#8F8174]">
-                        {resultItem.specifications.room}
+                  {/* Свойства */}
+                  <div className="flex-1">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <h3 className="text-lg font-normal text-[#2C2416]">
+                        {resultItem.name}
+                      </h3>
+                      <span className="text-xs font-mono text-[#2C2416]">
+                        €{resultItem.price}
                       </span>
                     </div>
 
-                    <h3 className="text-xl font-serif text-[#2B231D] mb-2">
-                      {resultItem.name}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-[#6B5E52] leading-relaxed mb-4">
+                    <div className="text-[10px] font-mono uppercase tracking-wider text-[#8A7E70] mb-3">
+                      {resultItem.specifications.collection} • {resultItem.specifications.style}
+                    </div>
+
+                    <p className="text-xs text-[#756857] font-light leading-relaxed mb-4">
                       {resultItem.description}
                     </p>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs text-[#7A6B5E]">
-                      {resultItem.features.slice(0, 4).map((f, i) => (
-                        <div key={i} className="flex items-center space-x-1.5">
-                          <span className="text-[#C8A885] font-bold">✓</span>
-                          <span className="truncate">{f}</span>
-                        </div>
-                      ))}
+                    <div className="text-[11px] text-[#8A7E70] space-y-1 font-mono">
+                      <div>— {resultItem.features[0]}</div>
+                      <div>— {resultItem.features[1]}</div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Кнопка повторного прохождения */}
-              <div className="text-center">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleStart}
-                  className="px-8 py-3.5 bg-[#C8A885] hover:bg-[#B99672] text-white rounded-full text-xs uppercase tracking-widest font-medium transition-colors shadow-sm"
+              {/* Действия со скруглениями */}
+              <div className="flex flex-col sm:flex-row gap-3">
+                <a
+                  href="https://3dfabriq.store"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:flex-1 text-center py-3.5 px-6 bg-[#2C2416] text-[#FAF7F2] text-xs font-medium uppercase tracking-[0.2em] rounded-md hover:opacity-90 transition-opacity"
                 >
-                  Пройти тест заново
-                </motion.button>
+                  3dfabriq.store
+                </a>
+
+                <button
+                  onClick={start}
+                  className="w-full sm:w-auto px-6 py-3.5 border border-[#E6DFD5] text-[#2C2416] text-xs font-mono uppercase tracking-widest rounded-md hover:border-[#2C2416] transition-colors"
+                >
+                  Заново
+                </button>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      {/* Футер */}
-      <footer className="w-full max-w-4xl mx-auto px-6 py-6 text-center text-xs text-[#A89887] tracking-wider z-10">
-        © {new Date().getFullYear()} 3d fabriq • Коллекция интерьерных форм в стиле Wisteria Lane
+      {/* Минимальный футер */}
+      <footer className="w-full max-w-xl mx-auto px-6 py-8 border-t border-[#E6DFD5] flex justify-between items-center text-[10px] font-mono tracking-widest text-[#8A7E70]">
+        <span>3D FABRIQ</span>
+        <a
+          href="https://3dfabriq.store"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#2C2416] transition-colors"
+        >
+          3dfabriq.store
+        </a>
       </footer>
     </div>
   );
